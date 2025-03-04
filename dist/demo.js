@@ -14,7 +14,7 @@ export class DCPUDemo extends DCPU {
         this.status = "";
     }
     // CPU-intensive task that will run continuously but yield to allow pings
-    async task(signal) {
+    async task(signal, env) {
         try {
             while (!signal.aborted) {
                 const start = this.data.primes.length > 0

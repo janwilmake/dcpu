@@ -1,10 +1,11 @@
 // DCPU package code
 // Durable Object implementation
 export class DCPU {
-    constructor(state) {
+    constructor(state, env) {
         this.controller = null;
         this.status = {};
         this.state = state;
+        this.env = env;
     }
     // Handler for fetch requests to the Durable Object
     async fetch(request) {
@@ -14,7 +15,7 @@ export class DCPU {
             this.controller = new AbortController();
             const signal = this.controller.signal;
             // Start the CPU-intensive task without awaiting
-            this.task(signal);
+            this.task(signal, this.env);
             return new Response("CPU task started", { status: 200 });
         }
         else if (url.pathname === "/ping") {
@@ -32,7 +33,7 @@ export class DCPU {
         }
         return new Response("Invalid endpoint", { status: 400 });
     }
-    async task(signal) {
+    async task(signal, env) {
         // this shall be replaced
         console.log("Your extension of this class needs a task function");
     }
