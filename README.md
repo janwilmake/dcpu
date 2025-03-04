@@ -20,14 +20,15 @@ npm install dcpu
 2. Configure your `wrangler.toml` to include the Durable Object:
 
 ```toml
+# replace the name class name with your DO class name of preference
 [durable_objects]
 bindings = [
-  { name = "YOUR_DO_NAME", class_name = "YourDCPUClass" }
+  { name = "YOUR_DO_NAME", class_name = "DCPUDemo" }
 ]
 
 [[migrations]]
 tag = "v1"
-new_classes = ["YourDCPUClass"]
+new_classes = ["DCPUDemo"]
 ```
 
 3. Import and extend the DCPU class in your project:
