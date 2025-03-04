@@ -1,4 +1,4 @@
-// cpudo package code
+// DCPU package code
 
 // Durable Object implementation
 export class DCPU {
@@ -44,10 +44,15 @@ export class DCPU {
     console.log("Your extension of this class needs a task function");
   }
 }
-
+/** Use this in any worker, queue consumer, or anywhere else, to call the task and stream the status back.
+ *
+ * Defaults to a timeout of 300 seconds
+ */
 export const executeAndStreamStatus = async (
   DO: DurableObjectNamespace,
   ctx: ExecutionContext,
+  /** @default 300 */
+  timeoutSeconds = 300,
 ): Promise<Response> => {
   // Create a new instance of the Durable Object
   const id = DO.newUniqueId();
@@ -77,7 +82,7 @@ export const executeAndStreamStatus = async (
 
         // Stop after 5 minutes (300 seconds) to prevent indefinite streaming
         count++;
-        if (count >= 300) {
+        if (count >= timeoutSeconds) {
           break;
         }
       }
