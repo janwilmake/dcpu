@@ -1,0 +1,14 @@
+name = "dcpu-demo"
+main = "src/demo.ts"
+compatibility_date = "2025-03-01"
+dev.port = 3000
+# Configure the Durable Object
+[durable_objects]
+bindings = [
+  { name = "DCPU_DEMO", class_name = "DCPUDemo" }
+]
+
+# Define migrations for the Durable Object
+[[migrations]]
+tag = "v1"
+new_classes = ["DCPUDemo"]

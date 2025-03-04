@@ -1,0 +1,15 @@
+{
+  "name": "dcpu",
+  "version": "0.0.1",
+  "description": "DCPU is a DO with infinite CPU time",
+  "main": "dist/mod.js",
+  "scripts": {
+    "build": "wrangler build",
+    "deploy": "wrangler publish",
+    "dev": "wrangler dev"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0"
+  }
+}
