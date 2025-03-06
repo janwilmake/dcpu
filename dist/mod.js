@@ -11,11 +11,12 @@ export class DCPU {
     async fetch(request) {
         const url = new URL(request.url);
         if (url.pathname === "/start") {
+            const data = await request.json();
             // Create a new abort controller for this run
             this.controller = new AbortController();
             const signal = this.controller.signal;
             // Start the CPU-intensive task without awaiting
-            this.task(signal, this.env);
+            this.task(signal, this.env, data);
             return new Response("CPU task started", { status: 200 });
         }
         else if (url.pathname === "/ping") {
@@ -33,7 +34,7 @@ export class DCPU {
         }
         return new Response("Invalid endpoint", { status: 400 });
     }
-    async task(signal, env) {
+    async task(signal, env, data) {
         // this shall be replaced
         console.log("Your extension of this class needs a task function");
     }
@@ -43,13 +44,18 @@ export class DCPU {
  * Defaults to a timeout of 300 seconds
  */
 export const executeAndStreamStatus = async (DO, ctx, 
+/** will be provided to your task */
+data, 
 /** @default 300 */
 timeoutSeconds = 300) => {
     // Create a new instance of the Durable Object
     const id = DO.newUniqueId();
     const durableObj = DO.get(id);
     // Start the CPU-intensive task
-    await durableObj.fetch(new Request("https://dummy-url/start"));
+    await durableObj.fetch(new Request("https://dummy-url/start", {
+        method: "POST",
+        body: data ? JSON.stringify(data) : "{}",
+    }));
     // Stream the progress back to the client
     const { readable, writable } = new TransformStream();
     const writer = writable.getWriter();

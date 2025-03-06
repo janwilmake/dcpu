@@ -1,6 +1,6 @@
 {
   "name": "dcpu",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "DCPU is a DO with infinite CPU time",
   "main": "dist/mod.js",
   "scripts": {
