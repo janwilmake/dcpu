@@ -25,6 +25,11 @@ export class DCPUDemo extends DCPU {
   protected async task(signal: AbortSignal, env: Env, data: {}) {
     try {
       while (!signal.aborted) {
+        if (this.data.primes.length > 10000) {
+          // we can also stop when we feel to be done
+          console.log("Done with prime search");
+          break;
+        }
         const start =
           this.data.primes.length > 0
             ? this.data.primes[this.data.primes.length - 1] + 1
