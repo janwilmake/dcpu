@@ -4,6 +4,7 @@ export class DCPU {
     constructor(state, env) {
         this.controller = null;
         this.status = {};
+        this.done = false;
         this.state = state;
         this.env = env;
     }
@@ -16,14 +17,25 @@ export class DCPU {
             this.controller = new AbortController();
             const signal = this.controller.signal;
             // Start the CPU-intensive task without awaiting
-            this.task(signal, this.env, data);
+            this.task(signal, this.env, data)
+                .catch((error) => {
+                const message = error?.message;
+                console.log("Catched in DCPU: ", message);
+                this.status = message;
+            })
+                .finally(() => {
+                // execute this after it's done
+                this.done = true;
+            });
             return new Response("CPU task started", { status: 200 });
         }
         else if (url.pathname === "/ping") {
             // Return the current state
-            return new Response(JSON.stringify({ status: this.status }), {
-                headers: { "Content-Type": "application/json" },
-            });
+            return new Response(JSON.stringify({
+                status: this.status,
+                // if this is true, we'll break from pinging more
+                done: this.done,
+            }), { headers: { "Content-Type": "application/json" } });
         }
         else if (url.pathname === "/stop") {
             if (this.controller) {
@@ -65,8 +77,11 @@ timeoutSeconds = 300) => {
             let count = 0;
             while (true) {
                 const response = await durableObj.fetch(new Request("https://dummy-url/ping"));
-                const text = await response.text();
-                await writer.write(new TextEncoder().encode(`${new Date().toISOString()} - ${text}\n`));
+                const json = await response.json();
+                await writer.write(new TextEncoder().encode(`${new Date().toISOString()} - ${JSON.stringify(json)}\n`));
+                if (json.done) {
+                    break;
+                }
                 // Wait 1 second before the next ping
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 // Stop after 5 minutes (300 seconds) to prevent indefinite streaming

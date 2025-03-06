@@ -12,6 +12,6 @@ export declare class DCPUDemo extends DCPU {
         primes: number[];
     };
     protected status: string;
-    protected task(signal: AbortSignal, env: Env): Promise<void>;
+    protected task(signal: AbortSignal, env: Env, data: {}): Promise<void>;
 }
 //# sourceMappingURL=demo.d.ts.map

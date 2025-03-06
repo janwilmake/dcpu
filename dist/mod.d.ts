@@ -3,6 +3,7 @@ export declare class DCPU {
     private controller;
     private env;
     protected status: {};
+    protected done: boolean;
     constructor(state: DurableObjectState, env: any);
     fetch(request: Request): Promise<Response>;
     protected task(signal: AbortSignal, env: any, data: {
